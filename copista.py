@@ -5,7 +5,7 @@ import subprocess
 import cherrypy
 from cherrypy.lib.static import serve_file
 
-ROOT_PATH='/home/filipe/Desktop/texlib'
+ROOT_PATH=os.getcwd()
 DOCUMENT_PATH='{0}/docs'.format(ROOT_PATH)
 BIN_PATH='{0}/bin'.format(ROOT_PATH)
 BASE_PATH='{0}/base'.format(ROOT_PATH)
@@ -34,8 +34,9 @@ class Copista(object):
 		pdf_file='{0}/{1}'.format(BIN_PATH,document)
 		if not os.path.exists(pdf_file):
 			document_name=document.strip('.pdf')
-			texcmd="TEXINPUTS={0}: pdflatex -output-directory={1} {2}/{3}/{3}.tex".format(BASE_PATH,BIN_PATH,DOCUMENT_PATH,document_name)
-			subprocess.call(texcmd,shell=True)
+			texcmd="{0}/copista_compile.sh {1}".format(ROOT_PATH, document_name)
+			print texcmd
+			print subprocess.call(texcmd, shell=True)
 			# TODO check for errors in the generation
 		return serve_file(pdf_file, "application/x-download", "attachment")
 
